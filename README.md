@@ -1,8 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-28T15:03:05Z" -->
-
-# jrf_pdb_agent_lib
+<!-- Time-stamp: "2025-05-28T15:05:22Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -10,7 +8,7 @@ This project is a concept implementation aimed at demonstrating the core idea.
 
 The brainstorming process for this concept is saved here:
 
-《AI エージェントはデバッガを好むのではないか？ AI 専用デバッガ、またはデバッガを使うことが前提の agent ライブラリ(Python モジュール)の登場が待たれる。… pdb_agent_lib 構想。 - JRF のひとこと》
+《AI エージェントはデバッガを好むのではないか？ AI 専用デバッガ、またはデバッガを使うことが前提の agent ライブラリ(Python モジュール)の登場が待たれる。… pdb_agent_lib 構想。 - JRF のひとこと》  
 http://jrf.cocolog-nifty.com/statuses/2025/05/post-617bf0.html
 
 The conversation with Gemini 2.5 Flash (with Canvas) when I created this is also publicly available here. (Note: The Canvas content is not currently viewable.)
@@ -58,7 +56,7 @@ To use it, simply place the `jrf_pdb_agent_lib.py` file in your project director
 Example: If cloning the repository
 
 ```sh
-git clone [https://github.com/JRF-2018/jrf_pdb_agent_lib.git](https://github.com/JRF-2018/jrf_pdb_agent_lib.git)
+git clone https://github.com/JRF-2018/jrf_pdb_agent_lib.git
 cp -p jrf_pdb_agent_lib/jrf_pdb_agent_lib.py .
 ```
 
