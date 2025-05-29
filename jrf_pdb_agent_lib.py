@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.7' # Time-stamp: <2025-05-29T03:49:33Z>
+__version__ = '0.0.8' # Time-stamp: <2025-05-29T05:18:55Z>
 
 import pdb
 import sys
@@ -23,6 +23,9 @@ EXEC = None
 # RESULT: A value to be returned by the pal.do function to its caller
 # after the debugger session concludes.
 RESULT = None
+# EXCEPTION: A value to be raised by the pal.do function
+# after the debugger session concludes.
+EXCEPTION = None
 
 # --- Shared Memory Configuration ---
 # Dictionary to keep track of active shared memory segments.
@@ -56,10 +59,10 @@ def do(order: str, current_code: str = None):
     It breaks into the Python debugger (pdb), effectively pausing the program
     and transferring control to the AI agent.
 
-    After the debugger session, it checks the global `EXEC` and `RESULT`
-    variables (which are expected to be set by the AI via direct PDB commands
-    or shared memory interactions) to either execute code in the caller's context
-    or return a value.
+    After the debugger session, it checks the global `EXEC`, `RESULT`
+    and 'EXCEPTION' variables (which are expected to be set by the AI
+    via direct PDB commands or shared memory interactions) to either
+    execute code in the caller's context or return a value.
 
     Args:
         order (str): A descriptive string outlining the task or instruction
@@ -72,8 +75,9 @@ def do(order: str, current_code: str = None):
     Returns:
         Any: The value set in `pal.RESULT` by the AI, or None if `pal.RESULT`
              was not set.
+
     """
-    global EXEC, RESULT
+    global EXEC, RESULT, EXCEPTION
 
     print(f"\n--- PDB Agent Lib: AI Interaction Point ---")
     print(f"Order for AI: '{order}'")
@@ -85,6 +89,7 @@ def do(order: str, current_code: str = None):
     # for the AI's interaction.
     EXEC = None
     RESULT = None
+    EXCEPTION = None
 
     # Get the caller's frame. sys._getframe(1) refers to the frame of the
     # function that called `pal.do`. This allows `exec` to run code
@@ -93,15 +98,16 @@ def do(order: str, current_code: str = None):
     context_locals = frame.f_locals
     context_globals = frame.f_globals
 
-    # Enter the Python debugger. Program execution pauses here.
-    # The AI agent is expected to interact with the program's state,
-    # potentially setting EXEC or RESULT directly in PDB or via shared memory.
+    # Enter the Python debugger. Program execution pauses here.  The
+    # AI agent is expected to interact with the program's state,
+    # potentially setting EXEC, RESULT or EXCEPTION directly in PDB or
+    # via shared memory.
     pdb.set_trace()
 
     print(f"--- PDB Agent Lib: Exiting Debugger ---")
 
     # While the AI has set the global EXEC variable, execute its content.
-    while EXEC is not None:
+    while EXEC is not None and EXCEPTION is None:
         print(f"PDB Agent Lib: Executing code from AI:\n{EXEC}")
         try:
             # Execute the code string in the caller's local and global context.
@@ -112,8 +118,14 @@ def do(order: str, current_code: str = None):
             print(f"--- PDB Agent Lib: Error during AI-provided code execution ---")
             traceback.print_exc()
             EXEC = None
+            EXCEPTION = None
             pdb.set_trace()
             print(f"--- PDB Agent Lib: Exiting Debugger ---")
+
+    # If the AI has set the global EXCEPTION variable, return its value.
+    if EXCEPTION is not None:
+        print(f"PDB Agent Lib: Raising exception from AI.")
+        raise EXCEPTION
 
     # If the AI has set the global RESULT variable, return its value.
     if RESULT is not None:

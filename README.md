@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-29T01:54:23Z" -->
+<!-- Time-stamp: "2025-05-29T05:25:45Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -38,7 +38,7 @@ While other forms of Inter-Process Communication (IPC) are possible, this versio
 The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core functionalities:
 
 * `pal.login(address_hint=None)`: Initializes the library. In this version, it primarily serves as a conceptual initialization point, as `send/receive` directly use shared memory. `address_hint` is not directly used for socket binding but can be used for logging or future complex setup.
-* `pal.do(order, current_code=None)`: The central function. When called, it pauses the program and enters the Python debugger (`pdb.set_trace()`). During this pause, the AI agent is expected to interact directly via `pdb` commands or shared memory. After the debugger session, if the AI has set the module's `EXEC` or `RESULT` global variables (e.g., by typing directly into the `pdb` prompt or via shared memory), `pal.do` will execute the provided code or return the specified result in the caller's context.
+* `pal.do(order, current_code=None)`: The central function. When called, it pauses the program and enters the Python debugger (`pdb.set_trace()`). During this pause, the AI agent is expected to interact directly via `pdb` commands or shared memory. After the debugger session, if the AI has set the module's `EXEC`, `RESULT` or `EXCEPTION` global variables (e.g., by typing directly into the `pdb` prompt or via shared memory), `pal.do` will execute the provided code, return the specified result in the caller's context or raise the exception.
 * `pal.reload_module(module_name)`: Allows dynamic reloading of a Python module. This is useful for an AI agent to apply code changes to `.py` or `.a.py` (AI Python) files without restarting the entire application.
 * `pal.share_memory(data_identifier, data)`: Provides a mechanism to share arbitrary Python objects using `multiprocessing.shared_memory`. Data is pickled for transfer.
 * `pal.retrieve_shared_memory(data_identifier)`: Retrieves data previously shared via `pal.share_memory`.
@@ -203,7 +203,7 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
   * `pal.login(address_hint=None)`: ライブラリを初期化します。このバージョンでは、send/receive が直接共有メモリを使用するため、主に概念的な初期化ポイントとして機能します。address_hint はソケットバインディングには直接使用されませんが、ロギングや将来の複雑なセットアップに使用できます。
 
-  * `pal.do(order, current_code=None)`: 中心となる関数です。呼び出されると、プログラムを一時停止し、Python デバッガ (`pdb.set_trace()`) に入ります。この一時停止中に、AI エージェントは直接 `pdb` コマンドまたは共有メモリを介して対話することが期待されます。デバッガセッション後、AI がモジュールの `EXEC` または `RESULT` グローバル変数（例：`pdb` プロンプトに直接入力するか、共有メモリを介して）を設定した場合、`pal.do` は提供されたコードを実行するか、指定された結果を呼び出し元のコンテキストで返します。
+  * `pal.do(order, current_code=None)`: 中心となる関数です。呼び出されると、プログラムを一時停止し、Python デバッガ (`pdb.set_trace()`) に入ります。この一時停止中に、AI エージェントは直接 `pdb` コマンドまたは共有メモリを介して対話することが期待されます。デバッガセッション後、AI がモジュールの `EXEC` または `RESULT` または `EXCEPTION` グローバル変数（例：`pdb` プロンプトに直接入力するか、共有メモリを介して）を設定した場合、`pal.do` は提供されたコードを実行するか、指定された結果を呼び出し元のコンテキストで返すか、例外を発生させます。
 
   * `pal.reload_module(module_name)`: Python モジュールの動的な再読み込みを可能にします。これは、AI エージェントがアプリケーション全体を再起動することなく、`.py` または `.a.py` (AI Python) ファイルへのコード変更を適用するのに役立ちます。
 
