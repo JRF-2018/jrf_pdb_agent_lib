@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.10' # Time-stamp: <2025-05-29T05:51:10Z>
+__version__ = '0.0.11' # Time-stamp: <2025-05-29T05:52:56Z>
 
 import pdb
 import sys
@@ -126,7 +126,7 @@ def do(order: str, current_code: str = None):
     if EXCEPTION is not None:
         print(f"PDB Agent Lib: Raising exception from AI.")
         raising_exception = EXCEPTION
-        # Clear EXCEPTION after returning to prevent accidental re-use.
+        # Clear EXCEPTION after raising to prevent accidental re-use.
         EXCEPTION = None
         raise raising_exception
 
