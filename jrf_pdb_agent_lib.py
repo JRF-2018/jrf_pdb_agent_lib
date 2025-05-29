@@ -1,7 +1,5 @@
-#!/usr/bin/python3
-__version__ = '0.0.1' # Time-stamp: <2025-05-28T13:04:30Z>
-
 # jrf_pdb_agent_lib.py
+__version__ = '0.0.2' # Time-stamp: <2025-05-29T01:47:47Z>
 
 import pdb
 import sys
@@ -127,27 +125,28 @@ def do(order: str, current_code: str = None):
 
 def reload_module(module_name: str):
     """
-    Reloads a specified Python module.
+    Loads or reloads a specified Python module.
     This function is primarily intended to be called by the AI agent
     from within the debugger session (or via shared memory command) to apply
-    changes to a module dynamically without restarting the entire program.
+    changes to a module dynamically or load a new one without restarting the entire program.
 
     Args:
-        module_name (str): The full name of the module to reload (e.g., 'my_module').
+        module_name (str): The full name of the module to load or reload (e.g., 'my_module').
     """
-    # Check if the module is already loaded.
-    if module_name not in sys.modules:
-        print(f"PDB Agent Lib: Module '{module_name}' not found in sys.modules. Cannot reload.")
-        return
-
     try:
-        # Get the module object from sys.modules.
-        module = sys.modules[module_name]
-        # Use importlib.reload to reload the module.
-        importlib.reload(module)
-        print(f"PDB Agent Lib: Module '{module_name}' reloaded successfully.")
+        if module_name in sys.modules:
+            # If the module is already loaded, reload it.
+            module = sys.modules[module_name]
+            importlib.reload(module)
+            print(f"PDB Agent Lib: Module '{module_name}' reloaded successfully.")
+        else:
+            # If the module is not loaded, import it.
+            importlib.import_module(module_name)
+            print(f"PDB Agent Lib: Module '{module_name}' loaded successfully.")
+    except ImportError as e:
+        print(f"PDB Agent Lib: Error importing module '{module_name}': {e}")
     except Exception as e:
-        print(f"PDB Agent Lib: Error reloading module '{module_name}': {e}")
+        print(f"PDB Agent Lib: An unexpected error occurred with module '{module_name}': {e}")
 
 def share_memory(data_identifier: str, data):
     """
