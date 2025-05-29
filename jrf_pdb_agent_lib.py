@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.12' # Time-stamp: <2025-05-29T08:42:25Z>
+__version__ = '0.0.13' # Time-stamp: <2025-05-29T11:26:35Z>
 
 import pdb
 import sys
@@ -142,13 +142,15 @@ def do(order: str, current_code: str = None):
         return None
 
 def consult_human(order: str = None, current_code: str = None):
-    """A conceptual function for the AI to explicitly request human
+    """
+    A conceptual function for the AI to explicitly request human
     intervention or input.  It breaks into the Python debugger,
     signaling that human attention is required.
 
     Args:
-        order (str): A descriptive string outlining the task or instruction
-                     for the human. This is displayed when entering pdb.
+        order (str): A descriptive string outlining the task or
+                     instruction for the human or the AI. This is
+                     displayed when entering pdb.
         current_code (str, optional): An optional string representing
                                       the current code snippet or
                                       context that might be relevant
@@ -157,7 +159,7 @@ def consult_human(order: str = None, current_code: str = None):
     """
     print(f"\n--- PDB Agent Lib: Human Consultation Requested ---")
     if order:
-        print(f"AI requests: '{order}'")
+        print(f"AI or Human requests: '{order}'")
     if current_code:
         print(f"Current Code Context (for Human Reference): \n{current_code}")
     print(f"Entering PDB. AI should provide input or guidance to the human.")
