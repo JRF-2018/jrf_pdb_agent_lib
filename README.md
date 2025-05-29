@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-29T13:05:24Z" -->
+<!-- Time-stamp: "2025-05-29T15:11:01Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -51,10 +51,17 @@ The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core 
 
 ## Installation
 
-As this is a concept implementation, a typical `pip` installation is not yet available.
-To use it, simply place the `jrf_pdb_agent_lib.py` file in your project directory or any location accessible by your Python environment.
+As this is a conceptual implementation, standard pip installation is not yet available.
 
-Example: If cloning the repository
+Example 1: Installing with pip from the repository
+
+```sh
+pip install git+https://github.com/JRF-2018/jrf_pdb_agent_lib
+```
+
+Alternatively, simply place the `jrf_pdb_agent_lib.py` file you obtained into your project directory or a location accessible from your Python environment.
+
+Example 2: Cloning the repository
 
 ```sh
 git clone https://github.com/JRF-2018/jrf_pdb_agent_lib.git
@@ -225,10 +232,17 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
 ## インストール
 
-これはコンセプト実装であるため、一般的な pip インストールはまだ利用できません。
-使用するには、`jrf_pdb_agent_lib.py` ファイルをプロジェクトディレクトリ、または Python 環境からアクセス可能な場所に配置するだけです。
+これはコンセプト実装であるため、通常の pip インストールはまだ利用できません。
 
-例: リポジトリをクローンする場合
+例1: リポジトリから pip でインストールする場合
+
+```sh
+pip install git+https://github.com/JRF-2018/jrf_pdb_agent_lib
+```
+
+または、取ってきた `jrf_pdb_agent_lib.py` ファイルをプロジェクトディレクトリ、または Python 環境からアクセス可能な場所に配置するだけです。
+
+例2: リポジトリをクローンする場合
 
 ```sh
 git clone https://github.com/JRF-2018/jrf_pdb_agent_lib.git
