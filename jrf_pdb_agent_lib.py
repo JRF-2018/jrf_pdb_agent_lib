@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.9' # Time-stamp: <2025-05-29T05:33:02Z>
+__version__ = '0.0.10' # Time-stamp: <2025-05-29T05:51:10Z>
 
 import pdb
 import sys
@@ -125,7 +125,10 @@ def do(order: str, current_code: str = None):
     # If the AI has set the global EXCEPTION variable, raise its value.
     if EXCEPTION is not None:
         print(f"PDB Agent Lib: Raising exception from AI.")
-        raise EXCEPTION
+        raising_exception = EXCEPTION
+        # Clear EXCEPTION after returning to prevent accidental re-use.
+        EXCEPTION = None
+        raise raising_exception
 
     # If the AI has set the global RESULT variable, return its value.
     if RESULT is not None:
