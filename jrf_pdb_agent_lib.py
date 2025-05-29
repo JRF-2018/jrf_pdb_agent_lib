@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.4' # Time-stamp: <2025-05-29T03:26:08Z>
+__version__ = '0.0.5' # Time-stamp: <2025-05-29T03:34:41Z>
 
 import pdb
 import sys
@@ -113,6 +113,7 @@ def do(order: str, current_code: str = None):
             traceback.print_exc()
             EXEC = None
             pdb.set_trace()
+            print(f"--- PDB Agent Lib: Exiting Debugger ---")
 
     # If the AI has set the global RESULT variable, return its value.
     if RESULT is not None:
