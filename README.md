@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-29T05:25:45Z" -->
+<!-- Time-stamp: "2025-05-29T06:45:12Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -39,12 +39,12 @@ The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core 
 
 * `pal.login(address_hint=None)`: Initializes the library. In this version, it primarily serves as a conceptual initialization point, as `send/receive` directly use shared memory. `address_hint` is not directly used for socket binding but can be used for logging or future complex setup.
 * `pal.do(order, current_code=None)`: The central function. When called, it pauses the program and enters the Python debugger (`pdb.set_trace()`). During this pause, the AI agent is expected to interact directly via `pdb` commands or shared memory. After the debugger session, if the AI has set the module's `EXEC`, `RESULT` or `EXCEPTION` global variables (e.g., by typing directly into the `pdb` prompt or via shared memory), `pal.do` will execute the provided code, return the specified result in the caller's context or raise the exception.
-* `pal.reload_module(module_name)`: Allows dynamic reloading of a Python module. This is useful for an AI agent to apply code changes to `.py` or `.a.py` (AI Python) files without restarting the entire application.
+* `pal.reload_module(module_name)`: Allows dynamic reloading of a Python module. This is useful for an AI agent to apply code changes to `.py` or `_a.py` (AI Python) files without restarting the entire application.
 * `pal.share_memory(data_identifier, data)`: Provides a mechanism to share arbitrary Python objects using `multiprocessing.shared_memory`. Data is pickled for transfer.
 * `pal.retrieve_shared_memory(data_identifier)`: Retrieves data previously shared via `pal.share_memory`.
 * `pal.send(data_identifier, data)`: Sends data using shared memory. This function is an alias for `pal.share_memory()`. It writes data to a shared memory segment, which can then be read by another process (e.g., the AI agent) that knows the `data_identifier`. In the future, this should be implemented with socket-based communication.
 * `pal.receive(data_identifier)`: Receives data using shared memory. This function is an alias for `pal.retrieve_shared_memory()`. It reads data from a shared memory segment identified by `data_identifier`. In the future, this should be implemented with socket-based communication.
-* `pal.preserve_full_context(filename="context_snapshot.pkl")`: A conceptual function that attempts to save the caller's context to a file. This feature is prepared to be useful when you want to execute and test by modifying `.py` (or `.a.py`) files called from `pal.EXEC` while maintaining that context. (**WARNING: This is highly experimental and limited. Python's runtime context is complex, and full serialization for callcc-like behavior is generally not feasible.**)
+* `pal.preserve_full_context(filename="context_snapshot.pkl")`: A conceptual function that attempts to save the caller's context to a file. This feature is prepared to be useful when you want to execute and test by modifying `.py` (or `_a.py`) files called from `pal.EXEC` while maintaining that context. (**WARNING: This is highly experimental and limited. Python's runtime context is complex, and full serialization for callcc-like behavior is generally not feasible.**)
 * `pal.restore_full_context(filename="context_snapshot.pkl")`: A conceptual function that attempts to restore a previously saved context from a file. (**WARNING: Highly experimental and limited. See above.**)
 
 
@@ -205,7 +205,7 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
   * `pal.do(order, current_code=None)`: 中心となる関数です。呼び出されると、プログラムを一時停止し、Python デバッガ (`pdb.set_trace()`) に入ります。この一時停止中に、AI エージェントは直接 `pdb` コマンドまたは共有メモリを介して対話することが期待されます。デバッガセッション後、AI がモジュールの `EXEC` または `RESULT` または `EXCEPTION` グローバル変数（例：`pdb` プロンプトに直接入力するか、共有メモリを介して）を設定した場合、`pal.do` は提供されたコードを実行するか、指定された結果を呼び出し元のコンテキストで返すか、例外を発生させます。
 
-  * `pal.reload_module(module_name)`: Python モジュールの動的な再読み込みを可能にします。これは、AI エージェントがアプリケーション全体を再起動することなく、`.py` または `.a.py` (AI Python) ファイルへのコード変更を適用するのに役立ちます。
+  * `pal.reload_module(module_name)`: Python モジュールの動的な再読み込みを可能にします。これは、AI エージェントがアプリケーション全体を再起動することなく、`.py` または `_a.py` (AI Python) ファイルへのコード変更を適用するのに役立ちます。
 
   * `pal.share_memory(data_identifier, data)`: `multiprocessing.shared_memory` を使用して任意の Python オブジェクトを共有するメカニズムを提供します。データは転送のために pickle 化されます。
 
@@ -215,7 +215,7 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
   * `pal.receive(data_identifier)`: 共有メモリを使用してデータを受信します。この関数は `pal.retrieve_shared_memory()` のエイリアスです。data_identifier で識別される共有メモリセグメントからデータを読み取ります。将来的にはソケットを使った通信に対応した実装にすべきでしょう。
 
-  * `pal.preserve_full_context(filename="context_snapshot.pkl")`: 呼び出し元のコンテキストをファイルに保存しようとする概念的な関数です。そのコンテクストのまま `pal.EXEC` から呼び出される `.py` (または `.a.py`)ファイルを修正しながら実行して試してたいというときに便利なためにこのような機能を準備しています。(**警告: これは非常に実験的かつ限定的です。Python のランタイムコンテキストは複雑であり、callcc のような動作のための完全なシリアル化は一般的に実現不可能です。**)
+  * `pal.preserve_full_context(filename="context_snapshot.pkl")`: 呼び出し元のコンテキストをファイルに保存しようとする概念的な関数です。そのコンテクストのまま `pal.EXEC` から呼び出される `.py` (または `_a.py`)ファイルを修正しながら実行して試してたいというときに便利なためにこのような機能を準備しています。(**警告: これは非常に実験的かつ限定的です。Python のランタイムコンテキストは複雑であり、callcc のような動作のための完全なシリアル化は一般的に実現不可能です。**)
 
   * `pal.restore_full_context(filename="context_snapshot.pkl")`: 以前に保存されたコンテキストを復元しようとする概念的な関数です。(**警告: 非常に実験的かつ限定的です。上記を参照してください。**)
 
