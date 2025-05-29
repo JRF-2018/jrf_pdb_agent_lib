@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-29T11:28:38Z" -->
+<!-- Time-stamp: "2025-05-29T13:05:24Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -39,7 +39,7 @@ The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core 
 
 * `pal.login(address_hint=None)`: Initializes the library. In this version, it primarily serves as a conceptual initialization point, as `send/receive` directly use shared memory. `address_hint` is not directly used for socket binding but can be used for logging or future complex setup.
 * `pal.do(order, current_code=None)`: The central function. When called, it pauses the program and enters the Python debugger (`pdb.set_trace()`). During this pause, the AI agent is expected to interact directly via `pdb` commands or shared memory. After the debugger session, if the AI has set the module's `EXEC`, `RESULT` or `EXCEPTION` global variables (e.g., by typing directly into the `pdb` prompt or via shared memory), `pal.do` will execute the provided code, return the specified result in the caller's context or raise the exception.
-* `pal.consult_human(order=None, current_code=None)`: This is a conceptual pseudo-function for the AI to request that it pause execution and interact with a human while the debugger is running. It enters the debugger at this point. It's also possible that the AI might explicitly write this function into its source code when it determines that human interaction is necessary.
+* `pal.consult_human(order=None, current_code=None)`: This is a pseudo-function for the AI to request that it pause execution and interact with a human while the debugger is running. It enters the debugger at this point. It's also possible that the AI might explicitly write this function into its source code when it determines that human interaction is necessary. Similar to `pal.do`, it interprets `EXEC`, `RESULT`, or `EXCEPTION` to support the consultation, but it differs in that it returns to the debugger even after `EXEC` completes.
 * `pal.reload_module(module_name)`: Allows dynamic reloading of a Python module. This is useful for an AI agent to apply code changes to `.py` or `_a.py` (AI Python) files without restarting the entire application.
 * `pal.share_memory(data_identifier, data)`: Provides a mechanism to share arbitrary Python objects using `multiprocessing.shared_memory`. Data is pickled for transfer.
 * `pal.retrieve_shared_memory(data_identifier)`: Retrieves data previously shared via `pal.share_memory`.
@@ -206,7 +206,7 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
   * `pal.do(order, current_code=None)`: 中心となる関数です。呼び出されると、プログラムを一時停止し、Python デバッガ (`pdb.set_trace()`) に入ります。この一時停止中に、AI エージェントは直接 `pdb` コマンドまたは共有メモリを介して対話することが期待されます。デバッガセッション後、AI がモジュールの `EXEC` または `RESULT` または `EXCEPTION` グローバル変数（例：`pdb` プロンプトに直接入力するか、共有メモリを介して）を設定した場合、`pal.do` は提供されたコードを実行するか、指定された結果を呼び出し元のコンテキストで返すか、例外を発生させます。
 
-  * `pal.consult_human(order=None, current_code=None)`: AI がデバッガを実行中に AI に対し、そこでいったん止まって人間と対話することを求めるための疑似関数で、このときデバッガに入ります。もしかすると AI が人間と対話が必要と判断するときソースにこの関数を明示するという使い方もあるかもしれません。
+  * `pal.consult_human(order=None, current_code=None)`: AI がデバッガを実行中に AI に対し、そこでいったん止まって人間と対話することを求めるための疑似関数で、このときデバッガに入ります。もしかすると AI が人間と対話が必要と判断するときソースにこの関数を明示するという使い方もあるかもしれません。consultation のサポートのため `pal.do` と同じく `EXEC` または `RESULT` または `EXCEPTION` を解しますが、こちらは `EXEC` 終了時にもデバッガに戻るという違いがあります。
   
   * `pal.reload_module(module_name)`: Python モジュールの動的な再読み込みを可能にします。これは、AI エージェントがアプリケーション全体を再起動することなく、`.py` または `_a.py` (AI Python) ファイルへのコード変更を適用するのに役立ちます。
 

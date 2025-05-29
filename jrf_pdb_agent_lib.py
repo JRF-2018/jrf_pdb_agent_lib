@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.13' # Time-stamp: <2025-05-29T11:26:35Z>
+__version__ = '0.0.14' # Time-stamp: <2025-05-29T12:58:55Z>
 
 import pdb
 import sys
@@ -85,8 +85,8 @@ def do(order: str, current_code: str = None):
         print(f"Current Code Context (for AI reference): \n{current_code}")
     print(f"Entering PDB. AI should interact directly via PDB commands or shared memory.")
 
-    # Reset EXEC and RESULT before entering pdb to ensure a clean state
-    # for the AI's interaction.
+    # Reset EXEC, RESULT and EXCEPTION before entering pdb to ensure a
+    # clean state for the AI's interaction.
     EXEC = None
     RESULT = None
     EXCEPTION = None
@@ -144,27 +144,91 @@ def do(order: str, current_code: str = None):
 def consult_human(order: str = None, current_code: str = None):
     """
     A conceptual function for the AI to explicitly request human
-    intervention or input.  It breaks into the Python debugger,
-    signaling that human attention is required.
+    intervention or input. It breaks into the Python debugger,
+    signaling that human attention is required. This function
+    also handles iterative execution of AI-provided code within the
+    human consultation session, similar to `pal.do`.
 
     Args:
         order (str): A descriptive string outlining the task or
                      instruction for the human or the AI. This is
                      displayed when entering pdb.
         current_code (str, optional): An optional string representing
-                                      the current code snippet or
-                                      context that might be relevant
-                                      for the human's decision-making.
+                                       the current code snippet or
+                                       context that might be relevant
+                                       for the human's decision-making.
 
     """
+    global EXEC, RESULT, EXCEPTION
+
     print(f"\n--- PDB Agent Lib: Human Consultation Requested ---")
     if order:
         print(f"AI or Human requests: '{order}'")
     if current_code:
         print(f"Current Code Context (for Human Reference): \n{current_code}")
     print(f"Entering PDB. AI should provide input or guidance to the human.")
+
+    # Reset EXEC, RESULT and EXCEPTION before entering pdb to ensure a
+    # clean state for the AI's interaction.
+    EXEC = None
+    RESULT = None
+    EXCEPTION = None
+
+    # Get the caller's frame. sys._getframe(1) refers to the frame of the
+    # function that called `pal.consult_human`. This allows `exec` to run code
+    # in the context where `pal.consult_human` was called.
+    frame = sys._getframe(1)
+    context_locals = frame.f_locals
+    context_globals = frame.f_globals
+
+    # Enter the Python debugger. Program execution pauses here.  The
+    # AI agent is expected to interact with the program's state,
+    # potentially setting EXEC, RESULT or EXCEPTION directly in PDB or
+    # via shared memory.
     pdb.set_trace()
-    print(f"--- PDB Agent Lib: Exiting Human Consultation Debugger ---")
+    print(f"--- PDB Agent Lib: Exiting Debugger ---")
+
+    # Loop to execute AI-provided code (via EXEC global) as long as
+    # EXEC is set and no exception is signaled. This allows the AI
+    # (or human) to run multiple commands iteratively without
+    # completely exiting the consultation.
+    while EXEC is not None and EXCEPTION is None:
+        print(f"PDB Agent Lib: Executing code from AI:\n{EXEC}")
+        try:
+            # Execute the code string in the caller's local and global context.
+            exec(EXEC, context_globals, context_locals)
+            print("--- PDB Agent Lib: AI-provided code execution successful ---")
+            EXEC = None
+            pdb.set_trace()
+            print(f"--- PDB Agent Lib: Exiting Debugger ---")
+        except Exception as e:
+            print(f"--- PDB Agent Lib: Error during AI-provided code execution ---")
+            traceback.print_exc()
+            EXEC = None
+            EXCEPTION = None
+            pdb.set_trace()
+            print(f"--- PDB Agent Lib: Exiting Debugger ---")
+
+    print(f"--- PDB Agent Lib: Exiting Human Consultation ---")
+
+    # If the AI has set the global EXCEPTION variable, raise its value.
+    if EXCEPTION is not None:
+        print(f"PDB Agent Lib: Raising exception from human consultation.")
+        raising_exception = EXCEPTION
+        # Clear EXCEPTION after raising to prevent accidental re-use.
+        EXCEPTION = None
+        raise raising_exception
+
+    # If the AI has set the global RESULT variable, return its value.
+    if RESULT is not None:
+        print(f"PDB Agent Lib: Returning result human consultation.")
+        returned_result = RESULT
+        # Clear RESULT after returning to prevent accidental re-use.
+        RESULT = None
+        return returned_result
+    else:
+        print(f"PDB Agent Lib: No result returned human consultation.")
+        return None
 
 def reload_module(module_name: str):
     """
