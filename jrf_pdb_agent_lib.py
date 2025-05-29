@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.2' # Time-stamp: <2025-05-29T01:47:47Z>
+__version__ = '0.0.3' # Time-stamp: <2025-05-29T02:36:27Z>
 
 import pdb
 import sys
@@ -99,18 +99,18 @@ def do(order: str, current_code: str = None):
 
     print(f"--- PDB Agent Lib: Exiting Debugger ---")
 
-    # If the AI has set the global EXEC variable, execute its content.
-    if EXEC is not None:
+    # While the AI has set the global EXEC variable, execute its content.
+    while EXEC is not None:
         print(f"PDB Agent Lib: Executing code from AI:\n{EXEC}")
         try:
             # Execute the code string in the caller's local and global context.
             exec(EXEC, context_globals, context_locals)
             print("PDB Agent Lib: AI-provided code execution successful.")
+            EXEC = None
         except Exception as e:
             print(f"PDB Agent Lib: Error during AI-provided code execution: {e}")
-        finally:
-            # Clear EXEC after execution to prevent accidental re-execution.
             EXEC = None
+            pdb.set_trace()
 
     # If the AI has set the global RESULT variable, return its value.
     if RESULT is not None:
