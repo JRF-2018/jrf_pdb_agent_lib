@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.8' # Time-stamp: <2025-05-29T05:18:55Z>
+__version__ = '0.0.9' # Time-stamp: <2025-05-29T05:33:02Z>
 
 import pdb
 import sys
@@ -122,7 +122,7 @@ def do(order: str, current_code: str = None):
             pdb.set_trace()
             print(f"--- PDB Agent Lib: Exiting Debugger ---")
 
-    # If the AI has set the global EXCEPTION variable, return its value.
+    # If the AI has set the global EXCEPTION variable, raise its value.
     if EXCEPTION is not None:
         print(f"PDB Agent Lib: Raising exception from AI.")
         raise EXCEPTION
