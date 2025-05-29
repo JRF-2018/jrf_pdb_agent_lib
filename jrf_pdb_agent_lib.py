@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.5' # Time-stamp: <2025-05-29T03:34:41Z>
+__version__ = '0.0.7' # Time-stamp: <2025-05-29T03:49:33Z>
 
 import pdb
 import sys
@@ -109,7 +109,7 @@ def do(order: str, current_code: str = None):
             print("PDB Agent Lib: AI-provided code execution successful.")
             EXEC = None
         except Exception as e:
-            print(f"PDB Agent Lib: Error during AI-provided code execution:")
+            print(f"--- PDB Agent Lib: Error during AI-provided code execution ---")
             traceback.print_exc()
             EXEC = None
             pdb.set_trace()
