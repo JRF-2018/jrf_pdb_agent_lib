@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.3' # Time-stamp: <2025-05-29T02:36:27Z>
+__version__ = '0.0.4' # Time-stamp: <2025-05-29T03:26:08Z>
 
 import pdb
 import sys
@@ -9,6 +9,7 @@ import socket # No longer used for send/receive, but kept for potential future u
 import pickle
 import threading
 import time
+import traceback
 import struct # No longer used for send/receive, but kept for potential future use or context
 from multiprocessing import shared_memory, resource_tracker
 
@@ -108,7 +109,8 @@ def do(order: str, current_code: str = None):
             print("PDB Agent Lib: AI-provided code execution successful.")
             EXEC = None
         except Exception as e:
-            print(f"PDB Agent Lib: Error during AI-provided code execution: {e}")
+            print(f"PDB Agent Lib: Error during AI-provided code execution:")
+            traceback.print_exc()
             EXEC = None
             pdb.set_trace()
 
