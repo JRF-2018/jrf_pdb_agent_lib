@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-30T12:13:30Z" -->
+<!-- Time-stamp: "2025-05-30T12:14:44Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -41,7 +41,7 @@ The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core 
 * `pal.do(order, current_code=None)`: The central function. When called, it pauses the program and enters the Python debugger (`pdb.set_trace()`). During this pause, the AI agent is expected to interact directly via `pdb` commands or shared memory. After the debugger session, if the AI has set the module's `EXEC`, `RESULT` or `EXCEPTION` global variables (e.g., by typing directly into the `pdb` prompt or via shared memory), `pal.do` will execute the provided code, return the specified result in the caller's context or raise the exception.
 * `pal.consult_human(order=None, current_code=None)`: This is a pseudo-function for the AI to request that it pause execution and interact with a human while the debugger is running. It enters the debugger at this point. It's also possible that the AI might explicitly write this function into its source code when it determines that human interaction is necessary. Similar to `pal.do`, it interprets `EXEC`, `RESULT`, or `EXCEPTION` to support the consultation, but it differs in that it returns to the debugger even after `EXEC` completes.
 
-**Please note**: Due to its design, directly calling `pal.do` or `pal.consult_human` (or functions that utilize them) from within a debugger session is not possible."
+**Please note**: Due to its design, directly calling `pal.do` or `pal.consult_human` (or functions that utilize them) from within a debugger session is not possible.
 
 * `pal.AiException(arg)`: A custom exception intended to be raised explicitly by the AI agent or within AI-provided code. This exception is designed to be caught by the AI's logic or the program's error handling. If not explicitly caught, it will propagate up the call stack through `pal.do`, similar to standard Python exceptions.
 * `pal.LoopRequestException(arg)`: A custom exception used by the AI agent within an `EXEC` block to explicitly request another iteration of the `EXEC` loop in `pal.do`. This is useful for managing multi-step operations within a single `pal.do`.
