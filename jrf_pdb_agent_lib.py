@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.16' # Time-stamp: <2025-05-30T03:02:20Z>
+__version__ = '0.0.17' # Time-stamp: <2025-05-30T04:02:11Z>
 
 import pdb
 import sys
@@ -113,7 +113,7 @@ def do(order: str, current_code: str = None):
 
     # Reset EXEC, RESULT and EXCEPTION before entering pdb to ensure a
     # clean state for the AI's interaction.
-    EXEC = None
+    EXEC = current_code
     RESULT = None
     EXCEPTION = None
 
@@ -225,7 +225,7 @@ def consult_human(order: str = None, current_code: str = None):
 
     # Reset EXEC, RESULT and EXCEPTION before entering pdb to ensure a
     # clean state for the AI's interaction.
-    EXEC = None
+    EXEC = current_code
     RESULT = None
     EXCEPTION = None
 
