@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.17' # Time-stamp: <2025-05-30T04:02:11Z>
+__version__ = '0.0.18' # Time-stamp: <2025-05-30T05:51:03Z>
 
 import pdb
 import sys
@@ -76,7 +76,7 @@ def login(address_hint=None):
     """
     print(f"PDB Agent Lib: Initialized. Shared memory is used for IPC.")
     if address_hint:
-        print(f"PDB Agent Lib: Address hint provided: {address_hint} (not used for socket binding in this version).")
+        print(f"PDB Agent Lib: Address hint provided: {repr(address_hint)} (not used for socket binding in this version).")
 
 def do(order: str, current_code: str = None):
     """
@@ -105,9 +105,9 @@ def do(order: str, current_code: str = None):
     global EXEC, RESULT, EXCEPTION
 
     print(f"\n--- PDB Agent Lib: AI Interaction Point ---")
-    print(f"Order for AI: '{order}'")
+    print(f"Order for AI: {repr(order)}")
     if current_code:
-        print(f"Current Code Context (for AI reference): \n{current_code}")
+        print(f"Current Code Context (for AI reference): {repr(current_code)}")
     print(f"AI should interact directly via PDB commands or shared memory.")
     print(f"--- PDB Agent Lib: Entering Debugger ---")
 
@@ -134,7 +134,7 @@ def do(order: str, current_code: str = None):
 
     # While the AI has set the global EXEC variable, execute its content.
     while EXEC is not None and EXCEPTION is None:
-        print(f"PDB Agent Lib: Executing code from AI:\n{EXEC}")
+        print(f"PDB Agent Lib: Executing code from AI: {repr(EXEC)}")
         current_exec = EXEC # Store current EXEC for error reporting
         try:
             # Execute the code string in the caller's local and global context.
@@ -147,8 +147,8 @@ def do(order: str, current_code: str = None):
             # It breaks the EXEC loop and sets the EXCEPTION global to be raised
             # after the loop concludes.
             print(f"--- PDB Agent Lib: AiException caught during EXEC execution ---")
-            print(f"Failing order: {order}") # Show the order that caused the exception
-            print(f"Failing EXEC command: {current_exec}") # Show the EXEC command that caused the exception
+            print(f"Failing order: {repr(order)}") # Show the order that caused the exception
+            print(f"Failing EXEC command: {repr(current_exec)}") # Show the EXEC command that caused the exception
             print(f"--- PDB Agent Lib: Exception set for propagation ---")
             EXEC = None
             EXCEPTION = e
@@ -165,8 +165,11 @@ def do(order: str, current_code: str = None):
                 # EXCEPTION, and re-enter PDB.  This gives the
                 # AI/human a chance to inspect the state and fix the
                 # issue.
+                #
+                # Normally, the AI should handle all exceptions and
+                # throw an AiException by EXCEPTION only when necessary.
                 print(f"--- PDB Agent Lib: Unhandled error during AI-provided code execution ---")
-                print(f"Failing EXEC command: {current_exec}") # Show the EXEC command that caused the exception
+                print(f"Failing EXEC command: {repr(current_exec)}") # Show the EXEC command that caused the exception
                 traceback.print_exc() # Print full traceback for debugging
             EXEC = None
             EXCEPTION = None
@@ -217,9 +220,9 @@ def consult_human(order: str = None, current_code: str = None):
 
     print(f"\n--- PDB Agent Lib: Human Consultation Requested ---")
     if order:
-        print(f"AI or Human requests: '{order}'")
+        print(f"AI or Human requests: {repr(order)}")
     if current_code:
-        print(f"Current Code Context (for Human Reference): \n{current_code}")
+        print(f"Current Code Context (for Human Reference): {repr(current_code)}")
     print(f"AI should provide input or guidance to the human.")
     print(f"--- PDB Agent Lib: Entering Debugger ---")
 
@@ -248,7 +251,7 @@ def consult_human(order: str = None, current_code: str = None):
     # (or human) to run multiple commands iteratively without
     # completely exiting the consultation.
     while EXEC is not None and EXCEPTION is None:
-        print(f"PDB Agent Lib: Executing code from AI:\n{EXEC}")
+        print(f"PDB Agent Lib: Executing code from AI: {repr(EXEC)}")
         current_exec = EXEC # Store current EXEC for error reporting
         try:
             # Execute the code string in the caller's local and global context.
@@ -259,7 +262,7 @@ def consult_human(order: str = None, current_code: str = None):
             print(f"--- PDB Agent Lib: Exiting Debugger ---")
         except Exception as e:
             print(f"--- PDB Agent Lib: Error during AI-provided code execution ---")
-            print(f"Failing EXEC command: {current_exec}") # Show the EXEC command that caused the exception
+            print(f"Failing EXEC command: {repr(current_exec)}") # Show the EXEC command that caused the exception
             traceback.print_exc()
             EXEC = None
             EXCEPTION = None
