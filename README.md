@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-30T12:14:44Z" -->
+<!-- Time-stamp: "2025-05-31T04:21:51Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -162,6 +162,8 @@ To explain this flow: when the AI executes the program, it enters the debugger a
   * **AI-Driven Debugger Commands**: Develop wrappers for pdb commands that can be directly issued by the AI via shared memory or other means.
 
   * **Security**: Implement authentication and authorization for shared memory access if multiple untrusted processes are involved.
+
+  * **AI-Specific Debugger**: If debugger state push/pop functionality were available, it should be possible to directly call `pal.do` or `pal.consult_human` even from a debugger session. The development of such an AI-specific debugger with these capabilities is highly anticipated. Should that happen, a dedicated `pdb_agent_lib` for it would likely be necessary.
 
 
 ## License
@@ -354,6 +356,8 @@ PDB Agent Lib: Returning result from AI.
 
   * **セキュリティ**: 複数の信頼できないプロセスが関与する場合、共有メモリへのアクセスに対する認証と認可を実装します。
 
+  * **AI 専用デバッガ**: デバッガの状態のプッシュ／ポップができれば、デバッガに止まったところからも直接 `pal.do` や `pal.consult_human` が呼び出せるようになるはずです。そのような機能もある AI 専用デバッガの開発が待たれます。そうなればそれ用の `pdb_agent_lib` が必要となるでしょう。
+  
 
 ## ライセンス
 
