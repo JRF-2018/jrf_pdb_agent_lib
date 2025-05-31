@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-31T04:21:51Z" -->
+<!-- Time-stamp: "2025-05-31T09:51:49Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -18,7 +18,7 @@ https://g.co/gemini/share/0251fcc144d8
 
 ## Vision
 
-Traditionally, debuggers have been used by humans to fix errors. `jrf_pdb_agent_lib` proposes a paradigm shift: using the debugger as a controlled entry point for an AI agent to interact with a program during its normal execution flow.
+Traditionally, debuggers have been used by humans to fix errors. `jrf_pdb_agent_lib` proposes a paradigm shift: it envisions using the debugger as a controlled entry point for an AI agent to interact with a program during its normal execution flow.
 
 When an AI-driven program needs to consult its originating AI (e.g., for complex reasoning, image generation, or dynamic code generation), it can "break" into a debugger session. At this point, the AI agent takes control, inspects the program's state, performs necessary operations (potentially calling external models or generating new code), and then instructs the program to resume with modified data or new code execution.
 
@@ -39,7 +39,7 @@ The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core 
 
 * `pal.login(address_hint=None)`: Initializes the library. In this version, it primarily serves as a conceptual initialization point, as `send/receive` directly use shared memory. `address_hint` is not directly used for socket binding but can be used for logging or future complex setup.
 * `pal.do(order, current_code=None)`: The central function. When called, it pauses the program and enters the Python debugger (`pdb.set_trace()`). During this pause, the AI agent is expected to interact directly via `pdb` commands or shared memory. After the debugger session, if the AI has set the module's `EXEC`, `RESULT` or `EXCEPTION` global variables (e.g., by typing directly into the `pdb` prompt or via shared memory), `pal.do` will execute the provided code, return the specified result in the caller's context or raise the exception.
-* `pal.consult_human(order=None, current_code=None)`: This is a pseudo-function for the AI to request that it pause execution and interact with a human while the debugger is running. It enters the debugger at this point. It's also possible that the AI might explicitly write this function into its source code when it determines that human interaction is necessary. Similar to `pal.do`, it interprets `EXEC`, `RESULT`, or `EXCEPTION` to support the consultation, but it differs in that it returns to the debugger even after `EXEC` completes.
+* `pal.consult_human(order=None, current_code=None)`: This is a pseudo-function for the AI to request a in execution and interact with a human while the debugger is running. It enters the debugger at this point. It's also possible that the AI might explicitly insert calls to this this function into its generated code when it determines that human interaction is necessary. Similar to `pal.do`, it interprets `EXEC`, `RESULT`, or `EXCEPTION` to support the consultation, however, unlike pal.do, it re-enters the debugger even after EXEC completes, allowing for continued human interaction.
 
 **Please note**: Due to its design, directly calling `pal.do` or `pal.consult_human` (or functions that utilize them) from within a debugger session is not possible.
 
@@ -56,7 +56,7 @@ The `jrf_pdb_agent_lib` module (shortened to `pal`) provides the following core 
 
 ## Installation
 
-As this is a conceptual implementation, standard pip installation is not yet available.
+This is a conceptual implementation.  While not yet published on PyPI, `jrf_pdb_agent_lib` can be installed directly from its Git repository using pip.
 
 Example 1: Installing with pip from the repository
 
@@ -225,7 +225,7 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
   * `pal.do(order, current_code=None)`: 中心となる関数です。呼び出されると、プログラムを一時停止し、Python デバッガ (`pdb.set_trace()`) に入ります。この一時停止中に、AI エージェントは直接 `pdb` コマンドまたは共有メモリを介して対話することが期待されます。デバッガセッション後、AI がモジュールの `EXEC` または `RESULT` または `EXCEPTION` グローバル変数（例：`pdb` プロンプトに直接入力するか、共有メモリを介して）を設定した場合、`pal.do` は提供されたコードを実行するか、指定された結果を呼び出し元のコンテキストで返すか、例外を発生させます。
 
-  * `pal.consult_human(order=None, current_code=None)`: AI がデバッガを実行中に AI に対し、そこでいったん止まって人間と対話することを求めるための疑似関数で、このときデバッガに入ります。もしかすると AI が人間と対話が必要と判断するときソースにこの関数を明示するという使い方もあるかもしれません。consultation のサポートのため `pal.do` と同じく `EXEC` または `RESULT` または `EXCEPTION` を解しますが、こちらは `EXEC` 終了時にもデバッガに戻るという違いがあります。
+  * `pal.consult_human(order=None, current_code=None)`: AI がデバッガを実行中に AI に対し、そこでいったん止まって人間と対話することを求めるための疑似関数で、このときデバッガに入ります。もしかすると AI が人間と対話が必要と判断するとき生成するソースにこの関数を明示するという使い方もあるかもしれません。consultation のサポートのため `pal.do` と同じく `EXEC` または `RESULT` または `EXCEPTION` を解しますが、こちらは人との対話のために `EXEC` 終了時にもデバッガに戻るという違いがあります。
 
 **注意**: 設計上、デバッガから直接 `pal.do` や `pal.consult_human` (を使った関数)を呼ぶことはできません。
 
@@ -249,7 +249,7 @@ AI 駆動型プログラムが元の AI に相談する必要がある場合（�
 
 ## インストール
 
-これはコンセプト実装であるため、通常の pip インストールはまだ利用できません。
+これはコンセプト実装であり、PyPI には登録されていませんが、`jrf_pdb_agent_lib` は Git リポジトリから直接インストールできます。
 
 例1: リポジトリから pip でインストールする場合
 
