@@ -1,5 +1,5 @@
 # jrf_pdb_agent_lib.py
-__version__ = '0.0.18' # Time-stamp: <2025-05-30T05:51:03Z>
+__version__ = '0.0.19' # Time-stamp: <2025-06-03T09:00:04Z>
 
 import pdb
 import sys
@@ -103,6 +103,9 @@ def do(order: str, current_code: str = None):
 
     """
     global EXEC, RESULT, EXCEPTION
+
+    if sys.gettrace():
+        raise RuntimeError("PDB Agent Lib: pal.do is called while debugger is already active.")
 
     print(f"\n--- PDB Agent Lib: AI Interaction Point ---")
     print(f"Order for AI: {repr(order)}")
@@ -217,6 +220,9 @@ def consult_human(order: str = None, current_code: str = None):
 
     """
     global EXEC, RESULT, EXCEPTION
+
+    if sys.gettrace():
+        raise RuntimeError("PDB Agent Lib: pal.consult_human is called while debugger is already active.")
 
     print(f"\n--- PDB Agent Lib: Human Consultation Requested ---")
     if order:
