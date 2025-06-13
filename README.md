@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-06-13T08:08:08Z" -->
+<!-- Time-stamp: "2025-06-13T09:08:54Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -158,7 +158,7 @@ To explain this flow: when the AI executes the program, it enters the debugger a
 `simplest-pal` is the simplest implementation of an "AI" when wrapping PDB (Python Debugger) with an AI, particularly for execution using `(jrf_)pdb_agent_lib`. It's a program that, if `current_code` is specified in `pal.do`, sends a `c` (continue) command; otherwise, it simply transfers control to the debugger. More information is available below:
 
 《JRF-2018/simplest-pal - The Simplest PDB Automation Layer for AI-Driven Debugging - GitHub》  
-https://github.com/JRF-2018/simplest_pal
+https://github.com/JRF-2018/simplest-pal
 
 
 ## Future Enhancements
@@ -359,7 +359,7 @@ PDB Agent Lib: Returning result from AI.
 `simplest-pal` は、(jrf_)pdb_agent_libを使った実行に関し PDB（Python Debugger）を「AI」でラップする場合の「AI」の最もシンプルな実装です。`pal.do` に current_code が指定されていれば `c` (continue) し、それ以外なら、単にデバッガの制御に移るだけのプログラムです。以下に情報があります。
 
 《JRF-2018/simplest-pal - The Simplest PDB Automation Layer for AI-Driven Debugging - GitHub》  
-https://github.com/JRF-2018/simplest_pal
+https://github.com/JRF-2018/simplest-pal
 
 
 ## 将来の拡張
