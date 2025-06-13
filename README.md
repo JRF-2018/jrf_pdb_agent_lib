@@ -1,6 +1,6 @@
 # jrf_pdb_agent_lib
 
-<!-- Time-stamp: "2025-05-31T09:51:49Z" -->
+<!-- Time-stamp: "2025-06-13T08:08:08Z" -->
 
 `jrf_pdb_agent_lib` is a conceptual Python module designed to facilitate advanced interaction between an AI agent and a running Python program. It primarily envisions a future where an AI agent can dynamically inspect, modify, and resume program execution via the Python debugger (`pdb`) and shared memory, treating the debugger as the primary interface for complex decision-making and code injection.
 
@@ -151,6 +151,14 @@ PDB Agent Lib: Returning result from AI.
 ```
 
 To explain this flow: when the AI executes the program, it enters the debugger and, following the instruction "Do something good.", the AI decides to multiply `x` by 2 and then subtract 1. Finally, 83 is returned. In this way, you can even "recursively" use `pal.do` within the returned `pal.EXEC` to break down problems.
+
+
+## simplest-pal
+
+`simplest-pal` is the simplest implementation of an "AI" when wrapping PDB (Python Debugger) with an AI, particularly for execution using `(jrf_)pdb_agent_lib`. It's a program that, if `current_code` is specified in `pal.do`, sends a `c` (continue) command; otherwise, it simply transfers control to the debugger. More information is available below:
+
+《JRF-2018/simplest-pal - The Simplest PDB Automation Layer for AI-Driven Debugging - GitHub》  
+https://github.com/JRF-2018/simplest_pal
 
 
 ## Future Enhancements
@@ -344,6 +352,14 @@ PDB Agent Lib: Returning result from AI.
 ```
 
 この流れを説明すると、AI がプログラムを実行するとデバッガに入って "Do something good." という命令に従い、AI は x に 2 をかけ 1 を引く操作をすることにしました。最終的に 83 が帰ってきます。このように、返す pal.EXEC の中で、pal.do を「再帰的」に使って問題を分割していっても良いのです。
+
+
+## simplest_pal
+
+`simplest-pal` は、(jrf_)pdb_agent_libを使った実行に関し PDB（Python Debugger）を「AI」でラップする場合の「AI」の最もシンプルな実装です。`pal.do` に current_code が指定されていれば `c` (continue) し、それ以外なら、単にデバッガの制御に移るだけのプログラムです。以下に情報があります。
+
+《JRF-2018/simplest-pal - The Simplest PDB Automation Layer for AI-Driven Debugging - GitHub》  
+https://github.com/JRF-2018/simplest_pal
 
 
 ## 将来の拡張
